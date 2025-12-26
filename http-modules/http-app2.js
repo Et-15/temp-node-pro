@@ -1,24 +1,24 @@
 const http = require('http');
 
-let users = {}; // in-memory storage
+let users = {}; 
 let idCounter = 1;
 
 const server = http.createServer((req, res) => {
   const urlParts = req.url.split('/').filter(Boolean); // split and remove empty parts
   const method = req.method;
 
-  // ---------------- GET all users ----------------
+  
   if (method === 'GET' && req.url === '/users') {
     res.setHeader('Content-Type', 'application/json');
     return res.end(JSON.stringify(users));
   }
 
-  // ---------------- POST create a user ----------------
+  
   if (method === 'POST' && req.url === '/users') {
     let body = '';
     req.on('data', chunk => body += chunk);
     req.on('end', () => {
-      const username = body.split('=')[1]; // simple form parsing
+      const username = body.split('=')[1]; 
       const id = idCounter++;
       users[id] = { id, name: username };
       res.end(`User created: ${JSON.stringify(users[id])}`);
@@ -26,7 +26,7 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // ---------------- PUT replace a user ----------------
+  
   if (method === 'PUT' && urlParts[0] === 'users' && urlParts[1]) {
     let body = '';
     req.on('data', chunk => body += chunk);
@@ -38,7 +38,6 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // ---------------- PATCH update a user ----------------
   if (method === 'PATCH' && urlParts[0] === 'users' && urlParts[1]) {
     let body = '';
     req.on('data', chunk => body += chunk);
@@ -51,7 +50,7 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // ---------------- DELETE a user ----------------
+  
   if (method === 'DELETE' && urlParts[0] === 'users' && urlParts[1]) {
     const id = urlParts[1];
     if (!users[id]) return res.end('User not found');
@@ -64,7 +63,7 @@ const server = http.createServer((req, res) => {
     return res.end();
   }
 
-  // ---------------- Default 404 ----------------
+  
   res.statusCode = 404;
   res.end('Route not found');
 });
